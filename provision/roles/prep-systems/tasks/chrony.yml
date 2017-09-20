@@ -1,0 +1,22 @@
+---
+# Setup cronyd task
+- name: Ensure ntp package is absent
+  package:
+    name: ntp
+    state: absent
+
+- name: Update chrony.conf from template
+  template:
+    src: chrony.conf.j2
+    dest: "{{ chrony_config_path }}"
+    owner: root
+    group: root
+    mode: 0644
+    backup: yes
+  register: chrony_conf
+
+- name: Ensure chrony service is started and enabled
+  service:
+    name: "chronyd"
+    enabled: yes
+    state: started

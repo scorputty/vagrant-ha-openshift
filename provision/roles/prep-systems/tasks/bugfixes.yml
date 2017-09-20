@@ -1,0 +1,8 @@
+---
+  # Here are bugfixes or workarrounds
+- name: Create /etc/openshift to fix bug 1419654
+  file:
+    path: /etc/openshift
+    state: directory
+    mode: 0755
+  when: "'os' in inventory_hostname"
