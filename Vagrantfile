@@ -31,6 +31,8 @@
 # run Openshift install from cli like this:
 # ansible-playbook --ask-pass ./openshift-ansible/playbooks/byo/config.yml -i inventory-simple.yml
 # (pass = vagrant)
+# or setup ssh keys like so:
+# vagrant landrush ls |grep 10.42 |sed 's/\,//' |cut -d" " -f1 |while read I; do  ssh-copy-id vagrant@$I; done
 
 # if you are behind a corperate proxy install this:
 # vagrant plugin install vagrant-proxyconf
@@ -100,6 +102,8 @@ Vagrant.configure("2") do |config|
       node.vm.box = "scorputty/centos"
       node.vm.hostname = "gateway#{i}.vagrant.test"
       node.vm.network :private_network, ip: "10.42.0.%d" % (1 + i )
+      # Enable ssh forward agent
+      config.ssh.forward_agent = true
       node.vm.provider :virtualbox do |vb|
         vb.memory = "512"
       end
@@ -121,6 +125,8 @@ Vagrant.configure("2") do |config|
       node.vm.box = "scorputty/centos"
       node.vm.hostname = "gluster#{i}.vagrant.test"
       node.vm.network :private_network, ip: "10.42.0.%d" % (11 + i )
+      # Enable ssh forward agent
+      config.ssh.forward_agent = true
       node.vm.provider :virtualbox do |vb|
         vb.memory = "512"
         unless File.exist?("gluster#{i}-disk0.vdi")
@@ -151,8 +157,11 @@ Vagrant.configure("2") do |config|
   (1..OSMASTER).each do |i|
     config.vm.define "osmaster#{i}" do |node|
       node.vm.box = "scorputty/centos"
+      # node.vm.box = "centos/atomic-host"
       node.vm.hostname = "osmaster#{i}.vagrant.test"
       node.vm.network :private_network, ip: "10.42.0.%d" % (21 + i )
+      # Enable ssh forward agent
+      config.ssh.forward_agent = true
       node.vm.provider :virtualbox do |vb|
         vb.memory = "1024"
       end
@@ -172,8 +181,11 @@ Vagrant.configure("2") do |config|
   (1..OSINFRA).each do |i|
     config.vm.define "osinfra#{i}" do |node|
       node.vm.box = "scorputty/centos"
+      # node.vm.box = "centos/atomic-host"
       node.vm.hostname = "osinfra#{i}.vagrant.test"
       node.vm.network :private_network, ip: "10.42.0.%d" % (31 + i )
+      # Enable ssh forward agent
+      config.ssh.forward_agent = true
       node.vm.provider :virtualbox do |vb|
         vb.memory = "512"
       end
@@ -193,8 +205,11 @@ Vagrant.configure("2") do |config|
   (1..OSNODE).each do |i|
     config.vm.define "osnode#{i}" do |node|
       node.vm.box = "scorputty/centos"
+      # node.vm.box = "centos/atomic-host"
       node.vm.hostname = "osnode#{i}.vagrant.test"
       node.vm.network :private_network, ip: "10.42.0.%d" % (51+ i )
+      # Enable ssh forward agent
+      config.ssh.forward_agent = true
       node.vm.provider :virtualbox do |vb|
         vb.memory = "512"
       end

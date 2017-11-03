@@ -1,5 +1,6 @@
 # This is an example of a bring your own (byo) host inventory
-# https://github.com/openshift/openshift-ansible/blob/master/inventory/byo/hosts.origin.example
+# https://github.com/openshift/openshift-ansible/blob/master/inventory/byo/hosts.example
+# https://docs.openshift.org/latest/install_config/install/advanced_install.html
 # Create an OSEv3 group that contains the masters and nodes groups
 [OSEv3:children]
 nodes
@@ -23,14 +24,14 @@ openshift_builddefaults_no_proxy="localhost,127.0.0.1,.vagrant.test,172.16."
 debug_level=4
 
 # SSH user, this user should allow ssh based auth without requiring a password
-ansible_ssh_user=root
+ansible_ssh_user=vagrant
 # If ansible_ssh_user is not root, ansible_sudo must be set to True
-ansible_sudo=False
+ansible_sudo=True
 ansible_become=yes
 
 # Specify the deployment type. Valid values are origin and openshift-enterprise.
+# deployment_type=origin
 openshift_deployment_type=origin
-deployment_type=origin
 
 # Specify the generic release of OpenShift to install. This is used mainly just during installation, after which we
 # rely on the version running on the first master. Works best for containerized installs where we can usually
@@ -45,7 +46,7 @@ openshift_version=3.6.0
 # This could potentially trigger an upgrade and downtime, so be careful with modifying this value after the cluster is set up.
 #openshift_image_tag=v3.6.0
 
-containerized=True
+containerized=False (Pulling etcd is broken so for now False)
 
 # This enables all the system containers except for docker:
 openshift_use_system_containers=False
@@ -59,8 +60,11 @@ openshift_use_system_containers=False
 #openshift_use_etcd_system_container=False
 #
 # In either case, system_images_registry must be specified to be able to find the system images
+# system_images_registry="docker.io"
+# when openshift_deployment_type=='openshift-enterprise'
+#system_images_registry="registry.access.redhat.com"
 
-# Install the openshift examples
+# Manage openshift example imagestreams and templates during install and upgrade
 openshift_install_examples=False
 
 # Pre-Check settings
@@ -78,7 +82,7 @@ openshift_master_api_port=8443
 openshift_master_console_port=8443
 
 # Docker settings
-openshift_docker_options='--selinux-enabled --insecure-registry 172.30.0.0/16'
+openshift_docker_options='--log-driver json-file --log-opt max-size=1M --log-opt max-file=3 --selinux-enabled --insecure-registry 172.30.0.0/16'
 openshift_docker_insecure_registries='172.30.0.0/16'
 
 # Region settings
@@ -98,6 +102,9 @@ osm_default_node_selector='region=primary'
 # # Set wipe to true only for reinstall
 # openshift_storage_glusterfs_wipe=True
 
+# enable ntp on masters to ensure proper failover
+openshift_clock_enabled=True
+
 # host group for masters
 [masters]
 osmaster1.vagrant.test openshift_ip=10.42.0.22 openshift_public_hostname=osmaster1.vagrant.test
@@ -112,7 +119,7 @@ osmaster3.vagrant.test openshift_ip=10.42.0.24
 
 # host group load balancers
 [lb]
-openshift-cluster.vagrant.test
+gateway1.vagrant.test containerized=False
 
 # host group for nodes, includes region info
 [nodes]

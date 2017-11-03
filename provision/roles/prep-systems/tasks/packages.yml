@@ -1,0 +1,21 @@
+- name: Install centos-release-openshift-origin36
+  yum:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - "centos-release-openshift-origin36"
+
+- name: Install centos openshift prereqs
+  yum:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - "wget"
+    - "git"
+    - "net-tools"
+    - "bind-utils"
+    - "iptables-services"
+    - "bridge-utils"
+    - "bash-completion"
+    - "origin-clients"
+  when: "'os' in inventory_hostname"

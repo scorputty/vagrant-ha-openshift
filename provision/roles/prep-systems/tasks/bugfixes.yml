@@ -6,3 +6,14 @@
     state: directory
     mode: 0755
   when: "'os' in inventory_hostname"
+
+# - name: Install RHEL docker distro
+#   yum:
+#     name: "docker-distribution"
+#     state: present
+#
+# - name: Start RHEL docker distro
+#   systemd:
+#     name: "docker-distribution"
+#     state: started
+#     enabled: yes
