@@ -1,3 +1,6 @@
+# -*- mode: ruby -*-
+# # vi: set ft=ruby :
+
 # This Vagrantfile installs a x node setup to test Openshift High Availabillity concepts
 #
 # Warning, this is only tested on Mac OSX, it should work on any Linux with minor adaptations...
@@ -19,6 +22,10 @@
 # sudo launchctl start homebrew.mxcl.dnsmasq
 # stage 2 setup openshift via ansible-playbook
 # git clone https://github.com/openshift/openshift-ansible
+# cd openshift-ansible/
+# git checkout release-3.6 # or any branch you want to test...
+# git pull
+# cd ../
 # test ansible:
 # ansible all -m ping -i inventory-ha.yml --ask-pass
 # run Openshift install from cli like this:
@@ -37,6 +44,20 @@
 
 # HA proxy
 # http://gateway1.vagrant.test:9000/stats
+
+require 'fileutils'
+require 'open-uri'
+require 'tempfile'
+require 'yaml'
+
+Vagrant.require_version ">= 2.0.0"
+
+CONFIG = File.expand_path("config.rb")
+if File.exist?(CONFIG)
+  require CONFIG
+end
+
+
 
 # directory of ansible-playbooks
 PROVTYPE = "provision"
@@ -86,7 +107,7 @@ Vagrant.configure("2") do |config|
       if i == GATEWAY
         node.vm.provision :ansible do |ansible|
           ansible.playbook = "#{PROVTYPE}/site.yml"
-          ansible.sudo = true
+          ansible.become = true
           ansible.verbose = "v"
           ansible.host_key_checking = false
         end
@@ -118,7 +139,7 @@ Vagrant.configure("2") do |config|
       if i == GLUSTER
         node.vm.provision :ansible do |ansible|
           ansible.playbook = "#{PROVTYPE}/site.yml"
-          ansible.sudo = true
+          ansible.become = true
           ansible.verbose = "v"
           ansible.host_key_checking = false
         end
@@ -139,7 +160,7 @@ Vagrant.configure("2") do |config|
       if i == OSMASTER
         node.vm.provision :ansible do |ansible|
           ansible.playbook = "#{PROVTYPE}/site.yml"
-          ansible.sudo = true
+          ansible.become = true
           ansible.verbose = "v"
           ansible.host_key_checking = false
         end
@@ -160,7 +181,7 @@ Vagrant.configure("2") do |config|
       if i == OSINFRA
         node.vm.provision :ansible do |ansible|
           ansible.playbook = "#{PROVTYPE}/site.yml"
-          ansible.sudo = true
+          ansible.become = true
           ansible.verbose = "v"
           ansible.host_key_checking = false
         end
@@ -181,7 +202,7 @@ Vagrant.configure("2") do |config|
       if i == OSNODE
         node.vm.provision :ansible do |ansible|
           ansible.playbook = "#{PROVTYPE}/site.yml"
-          ansible.sudo = true
+          ansible.become = true
           ansible.verbose = "v"
           ansible.host_key_checking = false
         end
