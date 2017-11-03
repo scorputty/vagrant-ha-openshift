@@ -1,4 +1,4 @@
-# This Vagrantfile installs a 9 node setup to test Openshift High Availabillity concepts
+# This Vagrantfile installs a x node setup to test Openshift High Availabillity concepts
 #
 # Warning, this is only tested on Mac OSX, it should work on any Linux with minor adaptations...
 #
@@ -43,11 +43,11 @@ PROVTYPE = "provision"
 # gateway server
 GATEWAY = 1
 # gluster servers with number of disks
-GLUSTER = 4
-DISKS = 4
+GLUSTER = 0
+DISKS = 2
 # openshift-cluster
 OSMASTER = 3
-OSINFRA = 3
+OSINFRA = 2
 OSNODE = 2
 
 Vagrant.configure("2") do |config|

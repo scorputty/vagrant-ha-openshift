@@ -1,13 +1,11 @@
 # This is an example of a bring your own (byo) host inventory
 # https://github.com/openshift/openshift-ansible/blob/master/inventory/byo/hosts.origin.example
-
 # Create an OSEv3 group that contains the masters and nodes groups
 [OSEv3:children]
+nodes
 masters
 etcd
 lb
-nodes
-#glusterfs
 
 # Set variables common for all OSEv3 hosts
 [OSEv3:vars]
@@ -22,7 +20,7 @@ openshift_builddefaults_git_https_proxy=http://172.16.10.220:3128
 openshift_builddefaults_no_proxy="localhost,127.0.0.1,.vagrant.test,172.16."
 
 # Debug level for all OpenShift components (Defaults to 2)
-debug_level=3
+debug_level=4
 
 # SSH user, this user should allow ssh based auth without requiring a password
 ansible_ssh_user=root
@@ -32,18 +30,22 @@ ansible_become=yes
 
 # Specify the deployment type. Valid values are origin and openshift-enterprise.
 openshift_deployment_type=origin
+deployment_type=origin
 
 # Specify the generic release of OpenShift to install. This is used mainly just during installation, after which we
 # rely on the version running on the first master. Works best for containerized installs where we can usually
 # use this to lookup the latest exact version of the container images, which is the tag actually used to configure
 # the cluster. For RPM installations we just verify the version detected in your configured repos matches this
 # release.
-openshift_release=v3.6
+openshift_release=v3.6.0
+openshift_version=3.6.0
 
 # Specify an exact container image tag to install or configure.
 # WARNING: This value will be used for all hosts in containerized environments, even those that have another version installed.
 # This could potentially trigger an upgrade and downtime, so be careful with modifying this value after the cluster is set up.
 #openshift_image_tag=v3.6.0
+
+containerized=True
 
 # This enables all the system containers except for docker:
 openshift_use_system_containers=False
@@ -57,32 +59,32 @@ openshift_use_system_containers=False
 #openshift_use_etcd_system_container=False
 #
 # In either case, system_images_registry must be specified to be able to find the system images
-system_images_registry="docker.io"
 
 # Install the openshift examples
-openshift_install_examples=true
+openshift_install_examples=False
 
 # Pre-Check settings
-openshift_override_hostname_check=true
+openshift_override_hostname_check=True
 openshift_disable_check=disk_availability,memory_availability,docker_storage,docker_image_availability
 
 # Master settings
-openshift_master_cluster_method=native
 # oscluster points to the "fake" external load balancer in our case gateway1.vagrant.test with DNS alias openshift-cluster.vagrant.test
+openshift_master_default_subdomain=app.openshift-cluster.vagrant.test
+openshift_master_cluster_method=native
 openshift_master_cluster_hostname=openshift-cluster.vagrant.test
 openshift_master_cluster_public_hostname=openshift-cluster.vagrant.test
-openshift_master_default_subdomain=app.openshift-cluster.vagrant.test
-openshift_master_overwrite_named_certificates=true
+openshift_master_overwrite_named_certificates=True
 openshift_master_api_port=8443
 openshift_master_console_port=8443
 
-
 # Docker settings
 openshift_docker_options='--selinux-enabled --insecure-registry 172.30.0.0/16'
+openshift_docker_insecure_registries='172.30.0.0/16'
 
 # Region settings
 openshift_router_selector='region=infra'
-# openshift_registry_selector='region=infra'
+openshift_registry_selector='region=infra'
+osm_default_node_selector='region=primary'
 
 # uncomment the following to enable htpasswd authentication; defaults to DenyAllPasswordIdentityProvider
 #openshift_master_identity_providers=[{'name': 'htpasswd_auth', 'login': 'True', 'challenge': 'True', 'kind': 'HTPasswdPasswordIdentityProvider', 'filename': '/etc/origin/master/htpasswd'}]
@@ -118,12 +120,12 @@ openshift-cluster.vagrant.test
 osmaster1.vagrant.test openshift_ip=10.42.0.22 openshift_node_labels="{'region': 'primary','zone': 'default'}" openshift_schedulable=False
 osmaster2.vagrant.test openshift_ip=10.42.0.23 openshift_node_labels="{'region': 'primary','zone': 'default'}" openshift_schedulable=False
 osmaster3.vagrant.test openshift_ip=10.42.0.24 openshift_node_labels="{'region': 'primary','zone': 'default'}" openshift_schedulable=False
-# app nodes
-osnode1.vagrant.test openshift_ip=10.42.0.52 openshift_node_labels="{'region': 'primary', 'zone': 'green'}" openshift_schedulable=True
-osnode2.vagrant.test openshift_ip=10.42.0.53 openshift_node_labels="{'region': 'primary', 'zone': 'blue'}" openshift_schedulable=True
 # infra nodes
 osinfra1.vagrant.test openshift_ip=10.42.0.32 openshift_node_labels="{'region': 'infra', 'zone': 'default'}" openshift_schedulable=True
 osinfra2.vagrant.test openshift_ip=10.42.0.33 openshift_node_labels="{'region': 'infra', 'zone': 'default'}" openshift_schedulable=True
+# app nodes
+osnode1.vagrant.test openshift_ip=10.42.0.52 openshift_node_labels="{'region': 'primary', 'zone': 'green'}" openshift_schedulable=True
+osnode2.vagrant.test openshift_ip=10.42.0.53 openshift_node_labels="{'region': 'primary', 'zone': 'blue'}" openshift_schedulable=True
 # gluster nodes
 # gluster1.vagrant.test openshift_ip=10.42.0.12
 # gluster2.vagrant.test openshift_ip=10.42.0.13
