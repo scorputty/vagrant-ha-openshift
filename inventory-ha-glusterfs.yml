@@ -106,11 +106,11 @@ openshift_master_htpasswd_users={'admin': '$apr1$6CZ4noKr$IksMFMgsW5e5FL0ioBhkk/
 # Specify that we want to use GlusterFS storage for a hosted registry
 # openshift_hosted_registry_storage_kind=glusterfs
 # # Specify local GlusterFS and Heketi
-# openshift_storage_glusterfs_is_native=True
-# openshift_storage_glusterfs_heketi_is_native=True
-# openshift_storage_glusterfs_timeout=900
+openshift_storage_glusterfs_is_native=True
+openshift_storage_glusterfs_heketi_is_native=True
+openshift_storage_glusterfs_timeout=900
 # # Set wipe to true only for reinstall
-# openshift_storage_glusterfs_wipe=True
+openshift_storage_glusterfs_wipe=True
 
 # enable ntp on masters to ensure proper failover
 openshift_clock_enabled=True
@@ -156,10 +156,10 @@ gluster3.vagrant.test openshift_ip=192.168.100.14
 # # be marked as LVM PVs), and will be formatted.
 # # It is recommended to not use a single cluster for both general and registry
 # # storage, so two three-node clusters will be required.
-# [glusterfs]
-# gluster1.vagrant.test glusterfs_ip=192.168.100.12 glusterfs_devices='[ "/dev/sdb", "/dev/sdc" ]'
-# gluster2.vagrant.test glusterfs_ip=192.168.100.13 glusterfs_devices='[ "/dev/sdb", "/dev/sdc" ]'
-# gluster3.vagrant.test glusterfs_ip=192.168.100.14 glusterfs_devices='[ "/dev/sdb", "/dev/sdc" ]'
+[glusterfs]
+gluster1.vagrant.test glusterfs_ip=192.168.100.12 glusterfs_devices='[ "/dev/sdb", "/dev/sdc" ]'
+gluster2.vagrant.test glusterfs_ip=192.168.100.13 glusterfs_devices='[ "/dev/sdb", "/dev/sdc" ]'
+gluster3.vagrant.test glusterfs_ip=192.168.100.14 glusterfs_devices='[ "/dev/sdb", "/dev/sdc" ]'
 # gluster4.vagrant.test glusterfs_ip=192.168.100.15 glusterfs_zone=2 glusterfs_devices='["/dev/sdb"]'
 # [glusterfs_registry]
 # gluster1.vagrant.test glusterfs_ip=192.168.100.12 glusterfs_devices='[ "/dev/sdb", "/dev/sdc" ]'
