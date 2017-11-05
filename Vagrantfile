@@ -54,7 +54,7 @@ require 'open-uri'
 require 'tempfile'
 require 'yaml'
 
-# Vagrant.require_version ">= 2.0.0"
+Vagrant.require_version ">= 2.0.0"
 
 # todo, variables in config.rb file
 CONFIG = File.expand_path("config.rb")

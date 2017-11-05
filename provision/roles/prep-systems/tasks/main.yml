@@ -1,6 +1,6 @@
 ---
 # Tasks list for prep-systems
 
-  - include: packages.yml
+  # - include: packages.yml
   - include: chrony.yml
   - include: bugfixes.yml

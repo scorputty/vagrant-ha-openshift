@@ -4,6 +4,7 @@
     state: present
   with_items:
     - "centos-release-openshift-origin36"
+  when: "'os' in inventory_hostname"
 
 - name: Install centos openshift prereqs
   yum:
