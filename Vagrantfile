@@ -82,21 +82,21 @@ Vagrant.configure("2") do |config|
     config.proxy.https    = "http://10.0.2.2:3128"
     config.proxy.no_proxy = "localhost,127.0.0.1,.vagrant.test,192.168.42.0/24,172.30.0.0/16,10.128.0.0/14"
   else
-    abort("Please install the hostmanager plugin, vagrant plugin install vagrant-proxyconf")
+    abort("Please install the vagrant-proxyconf plugin, vagrant plugin install vagrant-proxyconf")
   end
   if Vagrant.has_plugin?("landrush")
     config.landrush.enabled = true
     config.landrush.host 'console-openshift-cluster.vagrant.test', 'osmaster1.vagrant.test'
     config.landrush.host 'apps.openshift-cluster.vagrant.test', 'osmaster1.vagrant.test'
   else
-    abort("Please install the hostmanager plugin, vagrant plugin install landrush")
+    abort("Please install the landrush plugin, vagrant plugin install landrush")
   end
   if Vagrant.has_plugin?("vagrant-hostmanager")
     config.hostmanager.enabled = true
     config.hostmanager.manage_host = false
     config.hostmanager.manage_guest = true
   else
-    abort("Please install the hostmanager plugin, vagrant plugin install vagrant-hostmanager")
+    abort("Please install the vagrant-hostmanager plugin, vagrant plugin install vagrant-hostmanager")
   end
   config.ssh.insert_key = false
   config.vm.synced_folder ".", "/home/vagrant/sync", disabled: true
