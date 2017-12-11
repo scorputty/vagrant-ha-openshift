@@ -72,7 +72,7 @@ DISKS = 2
 DSIZE = 250
 # openshift-cluster
 OSMASTER = 1
-OSINFRA = 2
+OSINFRA = 0
 OSNODE = 2
 
 Vagrant.configure("2") do |config|
@@ -165,7 +165,7 @@ Vagrant.configure("2") do |config|
       # Enable ssh forward agent
       config.ssh.forward_agent = false
       node.vm.provider :virtualbox do |vb|
-        vb.memory = "1024"
+        vb.memory = "4096"
       end
 
       if i == OSMASTER
