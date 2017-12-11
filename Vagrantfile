@@ -77,12 +77,9 @@ OSNODE = 2
 
 Vagrant.configure("2") do |config|
   if Vagrant.has_plugin?("vagrant-proxyconf")
-    config.proxyconf.enabled = true
     config.proxy.http     = "http://10.0.2.2:3128"
     config.proxy.https    = "http://10.0.2.2:3128"
     config.proxy.no_proxy = "localhost,127.0.0.1,.vagrant.test,192.168.42.0/24,172.30.0.0/16,10.128.0.0/14"
-  else
-    abort("Please install the vagrant-proxyconf plugin, vagrant plugin install vagrant-proxyconf")
   end
   if Vagrant.has_plugin?("landrush")
     config.landrush.enabled = true
