@@ -67,11 +67,12 @@ PROVTYPE = "provision"
 # gateway (loadbalancer) server
 GATEWAY = 0
 # gluster servers with number of disks
-GLUSTER = 0
-DISKS = 0
+GLUSTER = 3
+DISKS = 2
+DSIZE = 250
 # openshift-cluster
 OSMASTER = 1
-OSINFRA = 0
+OSINFRA = 2
 OSNODE = 2
 
 Vagrant.configure("2") do |config|
@@ -86,9 +87,9 @@ Vagrant.configure("2") do |config|
     config.landrush.host 'apps.openshift-cluster.vagrant.test', 'osmaster1.vagrant.test'
   end
   if Vagrant.has_plugin?("vagrant-hostmanager")
-    config.hostmanager.enabled = false
+    config.hostmanager.enabled = true
     config.hostmanager.manage_host = false
-    config.hostmanager.manage_guest = false
+    config.hostmanager.manage_guest = true
   end
   config.ssh.insert_key = false
   config.vm.synced_folder ".", "/home/vagrant/sync", disabled: true
@@ -137,20 +138,20 @@ Vagrant.configure("2") do |config|
       (0..DISKS-1).each do |d|
         node.vm.provider :virtualbox do |vb|
           unless File.exist?("gluster#{i}-disk#{d}.vdi")
-            vb.customize [ "createmedium", "--filename", "gluster#{i}-disk#{d}.vdi", "--size", 1024*1024 ]
+            vb.customize [ "createmedium", "--filename", "gluster#{i}-disk#{d}.vdi", "--size", 1024*DSIZE ]
           end
           vb.customize [ "storageattach", :id, "--storagectl", "VboxSata", "--port", 3+d, "--device", 0, "--type", "hdd", "--medium", "gluster#{i}-disk#{d}.vdi" ]
         end
       end
 
-      if i == GLUSTER
-        node.vm.provision :ansible do |ansible|
-          ansible.playbook = "#{PROVTYPE}/site.yml"
-          ansible.become = true
-          ansible.verbose = "v"
-          ansible.host_key_checking = false
-        end
-      end
+      # if i == GLUSTER
+      #   node.vm.provision :ansible do |ansible|
+      #     ansible.playbook = "#{PROVTYPE}/site.yml"
+      #     ansible.become = true
+      #     ansible.verbose = "v"
+      #     ansible.host_key_checking = false
+      #   end
+      # end
     end
   end
 
@@ -188,7 +189,7 @@ Vagrant.configure("2") do |config|
       # Enable ssh forward agent
       config.ssh.forward_agent = false
       node.vm.provider :virtualbox do |vb|
-        vb.memory = "512"
+        vb.memory = "1024"
       end
 
       if i == OSINFRA
@@ -212,7 +213,7 @@ Vagrant.configure("2") do |config|
       # Enable ssh forward agent
       config.ssh.forward_agent = false
       node.vm.provider :virtualbox do |vb|
-        vb.memory = "512"
+        vb.memory = "1024"
       end
 
       if i == OSNODE

@@ -30,10 +30,11 @@ vagrant destroy -f
 vagrant landrush rm --all
 time vagrant up
 vagrant landrush ls |grep 192.168.42 |sed 's/\,//' |cut -d" " -f1 |while read I; do  ssh-copy-id vagrant@$I; done
-ansible nodes -i inventory-simple  -m shell -a "uptime" -b --ask-vault-pass
+ansible nodes -i inventory-simple/ --ask-vault-pass -m shell -a "sed -i '/127\.0\.0\.1.*vagrant*/d' /etc/hosts"
+ansible nodes -i inventory-simple/ --ask-vault-pass -m shell -a "uptime"
 git clone https://github.com/openshift/openshift-ansible
 cd openshift-ansible
-git checkout release-3.6
+git checkout release-3.7
 git fetch
 cd ../
 time ansible-playbook -i inventory-simple openshift-ansible/playbooks/byo/config.yml --ask-vault-pass
