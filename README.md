@@ -1,10 +1,10 @@
 # vagrant-ha-openshift
 Openshift Vagrant playground to test High Availability features with GlusterFS  
 
-# Warning Proxy!!!
+## Warning Proxy!!!
 If you need to use a proxy in a corporate network and want to test how this effects an OpenShift setup and install you can do that with this test setup.
 
-*** If not I highly recommend to comment-out the proxy section in the two following files.
+*** If not I highly recommend to comment-out the proxy section in the two following files! ***
 
 ### Vagrantfile proxy section:
 ```yaml
@@ -22,6 +22,7 @@ end
 openshift_http_proxy=http://10.0.2.2:3128
 openshift_https_proxy=http://10.0.2.2:3128
 openshift_no_proxy="localhost,127.0.0.1,.vagrant.test,kube-service-catalog.svc,192.168.42.22,192.168.42.32,192.168.42.33,192.168.42.52,192.168.42.53,172.30.0.0/16,10.128.0.0/14"
+```
 
 # Overview
 The separate inventory-* directories are to test different types of environments. Currently only inventory-simple contains files.
